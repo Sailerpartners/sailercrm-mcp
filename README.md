@@ -1,8 +1,13 @@
 # SailerCRM MCP
 
-An [MCP](https://modelcontextprotocol.io) server that exposes the **SailerCRM (出海咨询) Open API** as tools any MCP client (Claude Desktop, Claude Code, Cursor, …) can call.
+An [MCP](https://modelcontextprotocol.io) server that lets any MCP client (Claude Code, Claude Desktop, Cursor, …) connect to **SailerCRM (出海咨询)** and work with its records — submit leads, opportunities and customers, and read/update/delete customer data.
 
-The Open API is **CRUD-only over a whitelist of data records** — it can create, read, update, and delete records but **cannot alter table structure** (no DDL). This server is a thin, safe wrapper around it.
+What it **can** do: create, read, update, and delete data records over a fixed whitelist of tables and columns.
+
+What it **cannot** do:
+
+- **Change the system itself** — no schema/DDL, no code, no new tables or columns.
+- **Bulk-download** — a query returns **at most 10 records per call** (enforced by the server, not just this client).
 
 ## Resources
 
@@ -23,7 +28,7 @@ Call the `list_resources` tool to get the live list of resources and their writa
 | Tool | What it does |
 |---|---|
 | `list_resources` | List resources and their writable columns. |
-| `query_records` | List records with equality filters + `limit`/`offset`/`order`. |
+| `query_records` | List records with equality filters + `limit`/`offset`/`order` (max **10** rows per call). |
 | `get_record` | Fetch one record by id. |
 | `create_record` | Create a record (returns new id). |
 | `update_record` | Update columns of a record by id. |
@@ -93,6 +98,7 @@ Restart the client. You should see the `sailercrm` tools available.
 - Bearer auth on every request; a missing/invalid key returns `401`.
 - Only whitelisted tables and columns are reachable; unknown keys are ignored server-side.
 - All values are parameterized on the server — no SQL injection, no schema changes.
+- Queries return **at most 10 rows per call** — enforced by the CRM server, so it holds even if a client ignores the limit.
 - `delete_record` is a hard delete — use with care.
 
 ## License
