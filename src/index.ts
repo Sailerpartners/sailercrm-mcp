@@ -99,12 +99,12 @@ server.registerTool(
     description:
       "List records from a resource with optional equality filters and pagination. " +
       "filters keys must be valid columns (see list_resources); each is matched exactly (col = value). " +
-      "A maximum of 10 records is returned per call (server-enforced); use offset to page through more.",
+      "A maximum of 100 records is returned per call (server-enforced); use offset to page through more.",
     inputSchema: {
       resource: ResourceEnum,
       filters: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).optional()
         .describe("Equality filters, e.g. { status: 'new', region: 'US' }."),
-      limit: z.number().int().min(1).max(10).optional().describe("Max rows, hard-capped at 10 (default 10)."),
+      limit: z.number().int().min(1).max(100).optional().describe("Max rows, hard-capped at 100 (default 100)."),
       offset: z.number().int().min(0).optional().describe("Rows to skip for pagination (default 0)."),
       order: z.enum(["asc", "desc"]).optional().describe("Order by primary key (default desc)."),
     },

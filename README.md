@@ -7,7 +7,7 @@ What it **can** do: create, read, update, and delete data records over a fixed w
 What it **cannot** do:
 
 - **Change the system itself** — no schema/DDL, no code, no new tables or columns.
-- **Bulk-download** — a query returns **at most 10 records per call** (enforced by the server, not just this client).
+- **Bulk-download** — a query returns **at most 100 records per call** (enforced by the server, not just this client).
 
 ## Resources
 
@@ -28,7 +28,7 @@ Call the `list_resources` tool to get the live list of resources and their writa
 | Tool | What it does |
 |---|---|
 | `list_resources` | List resources and their writable columns. |
-| `query_records` | List records with equality filters + `limit`/`offset`/`order` (max **10** rows per call). |
+| `query_records` | List records with equality filters + `limit`/`offset`/`order` (max **100** rows per call). |
 | `get_record` | Fetch one record by id. |
 | `create_record` | Create a record (returns new id). |
 | `update_record` | Update columns of a record by id. |
@@ -98,7 +98,7 @@ Restart the client. You should see the `sailercrm` tools available.
 - Bearer auth on every request; a missing/invalid key returns `401`.
 - Only whitelisted tables and columns are reachable; unknown keys are ignored server-side.
 - All values are parameterized on the server — no SQL injection, no schema changes.
-- Queries return **at most 10 rows per call** — enforced by the CRM server, so it holds even if a client ignores the limit.
+- Queries return **at most 100 rows per call** — enforced by the CRM server, so it holds even if a client ignores the limit.
 - `delete_record` is a hard delete — use with care.
 
 ## License
