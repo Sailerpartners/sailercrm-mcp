@@ -93,6 +93,34 @@ server.registerTool(
 );
 
 server.registerTool(
+  "get_schema",
+  {
+    title: "Get CRM schema & vocabularies",
+    description:
+      "Return the CRM's controlled vocabularies: business segments (板块) with their funnel stages and " +
+      "sub-tracks (M&A 买方/卖方, channel 线上/线下), lead sources, activity sources, and roles. " +
+      "Call this BEFORE classifying records so you assign valid segment / track / stage / source values.",
+    inputSchema: {},
+  },
+  async () => {
+    try {
+      const res = await fetch(`${BASE}/api/meta`, KEY ? { headers: { Authorization: `Bearer ${KEY}` } } : undefined);
+      const text = await res.text();
+      let data: unknown;
+      try {
+        data = text ? JSON.parse(text) : null;
+      } catch {
+        data = text;
+      }
+      if (!res.ok) throw new Error(`HTTP ${res.status} — ${typeof data === "string" ? data : JSON.stringify(data)}`);
+      return ok(data);
+    } catch (e) {
+      return fail(e);
+    }
+  },
+);
+
+server.registerTool(
   "query_records",
   {
     title: "Query records",

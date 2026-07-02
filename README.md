@@ -28,6 +28,7 @@ Call the `list_resources` tool to get the live list of resources and their writa
 | Tool | What it does |
 |---|---|
 | `list_resources` | List resources and their writable columns. |
+| `get_schema` | Controlled vocabularies: segments, sub-tracks, funnel stages, lead/activity sources, roles. |
 | `query_records` | List records with equality filters + `limit`/`offset`/`order` (max **100** rows per call). |
 | `get_record` | Fetch one record by id. |
 | `create_record` | Create a record (returns new id). |
@@ -92,6 +93,19 @@ Restart the client. You should see the `sailercrm` tools available.
 - "Query the 10 most recent leads with status `new`."
 - "Create an opportunity for customer 326: segment `ma`, track `buy`, stage `mab_dd`, title 'X 并购'."
 - "Update customer 326's `flag` to `key`."
+
+## Skill: clean & import transcripts
+
+This repo ships a Claude Code skill, [`skills/sailercrm-intake`](skills/sailercrm-intake/SKILL.md), that drives the full workflow: drop raw meeting/call/chat transcripts into the chat → Claude cleans and classifies them into leads / opportunities / customers / partners → shows you a table to confirm → then imports (or updates existing records / changes an opportunity's stage) via these MCP tools.
+
+Install it (with the MCP connected):
+
+```bash
+mkdir -p ~/.claude/skills
+cp -r skills/sailercrm-intake ~/.claude/skills/
+```
+
+Then in Claude Code just paste or attach your notes and ask to "import these into SailerCRM".
 
 ## Security model
 
