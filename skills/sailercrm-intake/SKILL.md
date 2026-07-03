@@ -50,7 +50,7 @@ For **each** candidate, decide NEW vs UPDATE by searching the CRM first:
 Assign valid values using `get_schema`: pick the right `segment`, then its `track` if it has one, then a `stage` that belongs to that segment/track. Pick a `source` from the lead-source list. Never invent keys.
 
 ### 3. Present for confirmation — **hard gate**
-Show the user a compact, per-type table of everything you propose to write, **before writing anything**. For each row include: NEW/UPDATE, target resource, (for updates) the id + which fields change, and the key fields. Group by 线索 / 客户 / 商机 / 合作伙伴 / 联系人 / 活动 / 情报.
+Show the user a compact, per-type table of everything you propose to write, **before writing anything**. For each row include: NEW/UPDATE, target resource, (for updates) the id + which fields change, and the key fields. Group by 线索 / 客户 / 商机 / 合作伙伴 / 联系人 / 活动 / 情报. See `reference/example.md` for a full worked example (raw transcript → confirmation table → writes).
 
 Then stop and ask the user to confirm. Do not call any `create_record`/`update_record` until they explicitly approve. Let them edit the list first.
 
