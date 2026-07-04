@@ -80,4 +80,5 @@ Each opportunity's `stage` must be a key from its segment (and track). Stage key
 - opportunity → customer (`customer_id`, required). contact → customer. activity → customer (+ optional opportunity). customer_intelligence → customer (1:1).
 - Create a customer before its opportunities/contacts/intelligence.
 - Lead is standalone until converted; on conversion set `customer_id` and `status:"converted"`.
-- Won opportunity via Open API: set `status:"won"`, and separately set the customer `kind:"customer"` (the app-side win side-effects do not run through the Open API).
+- Won opportunity via Open API: just set `status:"won"` — the server automatically fills `closed_at`, promotes the customer to `kind:"customer"`, and archives linked leads. `status:"lost"` returns the linked lead to `reviewing` if the customer has no other open deals.
+- The server validates all enum fields and stage-flow consistency; deletes require the record to be archived first.

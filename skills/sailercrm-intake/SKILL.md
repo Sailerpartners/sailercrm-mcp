@@ -66,8 +66,9 @@ After writing, report a short summary: N created, N updated, with their ids. If 
 
 ## Status-change & upsert notes
 
-- **Advance an opportunity**: `update_record` opportunities `{ stage: "<valid key for its segment/track>" }`. Optionally add an activity recording why.
-- **Won / lost via Open API**: set `status:"won"` or `"lost"`. ⚠ The Open API does **not** run the app's win side-effects — if a deal is won, also set the customer's `kind:"customer"`, and if a matching lead exists set its `status:"converted"`. Do these as explicit updates and mention them in the confirmation table.
+- **Advance an opportunity**: `update_record` opportunities `{ stage: "<valid key for its segment/track>" }`. The server validates the stage belongs to the opportunity's segment/track flow (`400 stage_not_in_flow` otherwise). Optionally add an activity recording why.
+- **Won / lost via Open API**: set `status:"won"` or `"lost"`. The server runs the app's side-effects automatically: won → fills `closed_at`, sets the customer to `kind:"customer"`, archives linked leads; lost → returns the linked lead to `reviewing` when the customer has no other open deals. No manual follow-up updates needed.
+- **Validation**: enum fields (status/type/kind/flag/segment/track/stage/source/currency) are server-validated; invalid values return `400 {error:"invalid_value", field}`. Deletes follow the app's protection rules (`only_archived_can_delete`).
 - **Lead progressing**: update the lead `status` (`reviewing`, `converted`, `discarded`). If it becomes a real deal, create the customer + opportunity (and set the lead `status:"converted"`, `customer_id`).
 - **Dedup**: prefer updating an existing record over creating a duplicate. When unsure whether two names are the same org, ask the user in the confirmation step.
 
