@@ -10,8 +10,11 @@
  *   SAILERCRM_OPEN_API_KEY   (required)  Bearer key for the Open API.
  *   SAILERCRM_BASE_URL       (optional)  CRM base URL.
  *                                        Default: https://sailer-crm.ai-da2.workers.dev
+ *   SAILERCRM_CRM            (optional)  Which CRM to connect to on the shared portal:
+ *                                        "chuhai" (出海, default) or "china-entry" (入华).
+ *                                        Each CRM is fully isolated with its own data and key.
  *
- * The Open API lives at `${SAILERCRM_BASE_URL}/api/open`.
+ * The Open API lives at `${SAILERCRM_BASE_URL}/api/${SAILERCRM_CRM}/open`.
  */
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
@@ -19,7 +22,9 @@ import { z } from "zod";
 
 const BASE = (process.env.SAILERCRM_BASE_URL || "https://sailer-crm.ai-da2.workers.dev").replace(/\/+$/, "");
 const KEY = process.env.SAILERCRM_OPEN_API_KEY || "";
-const OPEN = `${BASE}/api/open`;
+const CRM = (process.env.SAILERCRM_CRM || "chuhai").replace(/[^a-z-]/g, "");
+const API = `${BASE}/api/${CRM}`;
+const OPEN = `${API}/open`;
 
 // Resource whitelist — must mirror the CRM Open API. Server-side is the source
 // of truth; listed here only to constrain tool input and give better errors.
@@ -104,7 +109,7 @@ server.registerTool(
   },
   async () => {
     try {
-      const res = await fetch(`${BASE}/api/meta`, KEY ? { headers: { Authorization: `Bearer ${KEY}` } } : undefined);
+      const res = await fetch(`${API}/meta`, KEY ? { headers: { Authorization: `Bearer ${KEY}` } } : undefined);
       const text = await res.text();
       let data: unknown;
       try {

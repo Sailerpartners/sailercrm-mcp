@@ -37,14 +37,15 @@ Call the `list_resources` tool to get the live list of resources and their writa
 
 ## Configuration
 
-The server reads two environment variables:
+The server reads three environment variables:
 
 | Variable | Required | Default |
 |---|---|---|
-| `SAILERCRM_OPEN_API_KEY` | ✅ | — (Bearer key for the Open API) |
+| `SAILERCRM_OPEN_API_KEY` | ✅ | — (Bearer key for the chosen CRM's Open API) |
 | `SAILERCRM_BASE_URL` | ❌ | `https://sailer-crm.ai-da2.workers.dev` |
+| `SAILERCRM_CRM` | ❌ | `chuhai` — which CRM on the portal: `chuhai` (出海) or `china-entry` (入华) |
 
-The Open API is reached at `${SAILERCRM_BASE_URL}/api/open`.
+The Open API is reached at `${SAILERCRM_BASE_URL}/api/${SAILERCRM_CRM}/open`. Each CRM on the portal is fully isolated — separate data and separate API keys — so connect one MCP server per CRM you need.
 
 > **Never commit your API key.** It is passed at runtime via the environment only. This repository contains no secrets.
 
